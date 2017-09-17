@@ -1,0 +1,38 @@
+* 每個檔案都要設定一次檔案變數太麻煩了! 有沒有好方法?
+  Emacs 有提供針對以資料夾為單位 (或稱專案) 一次設定各種變數的方式，在該資料夾下 (專案根目錄) 開一個名為 .dir-locals.el 的檔案，
+  Emacs 會把這個檔案所設定的變數套用到其子下及子資料夾下的所有檔案。除了檔案外，像是 =Dired= 這樣有路徑的 buffer 也會受到 .dir-locals.el 的影響而更動環境變數。
+  
+** 手動設定 .dir-locals.el
+  
+  .dir-locals.el 內的格式:
+
+  #+BEGIN_SRC emacs-lisp
+    ( ;; <-- 記得要包在一個 list 內
+     ;; list 內每個 element 為 list 或是 accocation list
+     (nil . ((indent-tabs-mode . t)
+             (fill-column . 80)))
+     (js2-mode . ((js-indent-level . 8)))
+     ("src/imported" . (
+                        (nil . ((change-log-default-name . "ChangeLog.local")))))
+    )
+  #+END_SRC
+  
+  
+  依 key 的類型不同，可以再定義不同變數作用的 Scope，能設定的方式有 3 種：
+  - nil
+    變數為全域，在該資料夾下所有子資料夾及所有子資料夾開出來的 buffer 都會作用
+  - mode symbol
+    變數只會作用在該 mode 的 buffer 中
+  - 相對路徑字串
+    只會在該路徑所指定的資料夾下作用，value 的部份為 list，內容是 association lists，並且可以再使用以上兩個規則。
+  
+
+** ☛ TODO 
+   
+  除了直接寫 .dir-locals 來設定外，還可以用 =M-x add-dir-local-variable= 用選單的方式加入，當沒有 .dir-locals.el 時，emacs 會自動產生，並加上所選的設定，自動產生的路徑會與下指令時，buffer 所開始的檔案路徑相同。
+
+
+** ☛ TODO Windows 下的差異
+  
+  
+  
